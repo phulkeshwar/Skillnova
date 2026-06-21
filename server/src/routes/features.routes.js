@@ -77,6 +77,7 @@ api.patch('/preferences/notifications', csrfProtection, validate(prefSchema), pr
 api.get('/exports/reports', exports.exportReports);
 api.get('/exports/users', requirePermission('users:read'), exports.exportUsers);
 api.get('/exports/attendance', exports.exportAttendance);
+api.get('/exports/audit', requirePermission('audit:read'), exports.exportAuditLogs);
 
 // ── Meetings ──────────────────────────────────────────────
 const meetingCreateSchema = z.object({

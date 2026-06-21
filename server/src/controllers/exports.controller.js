@@ -83,4 +83,46 @@ export const exportAttendance = asyncHandler(async (req, res) => {
   streamCSV(res, data);
 });
 
-export default { exportReports, exportUsers, exportAttendance };
+// GET /exports/audit?format=csv|json
+export const exportAuditLogs = asyncHandler(async (req, res) => {
+  const format = (req.query.format || 'csv').toLowerCase();
+  const { action, userId, resource, from, to } = req.query;
+
+  const where = {};
+  if (action) where.action = action;
+  if (userId) where.userId = userId;
+  if (resource) where.resource = resource;
+
+  if (from || to) {
+    where.createdAt = {};
+    if (from) where.createdAt.gte = new Date(from);
+    if (to) where.createdAt.lte = new Date(to);
+  }
+
+  const rows = await prisma.auditLog.findMany({
+    where,
+    orderBy: { createdAt: 'desc' },
+    include: { user: { select: { name: true, email: true } } },
+    take: 5000,
+  });
+
+  const data = rows.map((a) => ({
+    id: a.id,
+    user: a.user?.name,
+    email: a.user?.email,
+    action: a.action,
+    resource: a.resource,
+    resourceId: a.resourceId,
+    ip: a.ip,
+    userAgent: a.userAgent,
+    createdAt: a.createdAt,
+  }));
+
+  if (format === 'json') {
+    res.setHeader('Content-Type', 'application/json');
+    return res.json({ items: data });
+  }
+  streamCSV(res, data);
+});
+
+export default { exportReports, exportUsers, exportAttendance, exportAuditLogs };

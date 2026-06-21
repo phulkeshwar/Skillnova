@@ -10,6 +10,7 @@ import * as attendance from '../controllers/attendance.controller.js';
 import * as projects from '../controllers/projects.controller.js';
 import * as ai from '../controllers/ai.controller.js';
 import * as notif from '../controllers/notifications.controller.js';
+import * as analytics from '../controllers/analytics.controller.js';
 import { authenticate, requireAuth } from '../middleware/auth.js';
 import { requirePermission } from '../middleware/rbac.js';
 import { validate, schemas } from '../middleware/validate.js';
@@ -270,5 +271,7 @@ api.post('/notifications/read-all', notif.markAllRead);
 // ── Analytics ─────────────────────────────────────────────
 api.get('/analytics/platform', requirePermission('users:read'), notif.platformStats);
 api.get('/analytics/interns', requirePermission('users:read'), notif.internPerformance);
+api.get('/analytics/dashboard', requirePermission('attendance:self'), analytics.getDashboardSummary);
+api.get('/analytics/team-productivity', requirePermission('users:read'), analytics.getTeamProductivity);
 
 export default api;

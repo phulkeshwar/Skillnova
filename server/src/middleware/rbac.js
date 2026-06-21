@@ -77,7 +77,7 @@ export const PERMISSIONS = {
   // Settings & Audit
   'settings:read':   ['SUPER_ADMIN', 'ADMIN'],
   'settings:update': ['SUPER_ADMIN'],
-  'audit:read':      ['SUPER_ADMIN'],
+  'audit:read':      ['SUPER_ADMIN', 'ADMIN'],
 };
 
 // ── Helpers ───────────────────────────────────────────────

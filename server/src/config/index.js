@@ -41,8 +41,12 @@ export const config = {
     accessSecret: process.env.JWT_ACCESS_SECRET,
     refreshSecret: process.env.JWT_REFRESH_SECRET,
     secret: process.env.JWT_SECRET,
-    accessTtl: process.env.ACCESS_TOKEN_TTL || '15m',
-    refreshTtl: process.env.REFRESH_TOKEN_TTL || '7d',
+    accessTtl: process.env.ACCESS_TOKEN_TTL && !isNaN(process.env.ACCESS_TOKEN_TTL)
+      ? Number(process.env.ACCESS_TOKEN_TTL)
+      : process.env.ACCESS_TOKEN_TTL || '15m',
+    refreshTtl: process.env.REFRESH_TOKEN_TTL && !isNaN(process.env.REFRESH_TOKEN_TTL)
+      ? Number(process.env.REFRESH_TOKEN_TTL)
+      : process.env.REFRESH_TOKEN_TTL || '7d',
     otpTtl: process.env.OTP_TTL || '10m',
     twoFaTtl: process.env.TWOFA_TTL || '10m',
   },

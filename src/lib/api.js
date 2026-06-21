@@ -38,7 +38,13 @@ api.interceptors.response.use(
     const original = error.config;
     const status = error.response?.status;
 
-    if (status === 401 && !original._retry && original.url !== '/auth/refresh' && original.url !== '/auth/login') {
+    if (
+      status === 401 &&
+      !original._retry &&
+      original.url !== '/auth/refresh' &&
+      original.url !== '/auth/login' &&
+      original.url !== '/auth/verify-otp'
+    ) {
       original._retry = true;
       try {
         refreshing = refreshing || axios.post(`${BASE_URL}/auth/refresh`, {}, { withCredentials: true });
